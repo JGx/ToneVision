@@ -1,0 +1,44 @@
+#canvas{
+	border: solid 1px red;
+	height: 400px;
+}
+
+#serialize-button{
+    float: right;
+    margin: -20px 360px 20px 0px;
+}
+#clear-button{
+    float:right;
+    margin: -20px 20px 20px 0px;
+}
+
+#serial-printout{
+    height: 150px;
+}
+
+#serial-textarea{
+    width:100%;
+    margin: 10px auto 10px auto;
+}
+
+.moduleBlock{
+	height: 100px;
+	width: 100px;
+	border: solid 1px blue;
+	position: absolute;
+}
+
+.outputCol{
+    float: right;
+    width: 10px;
+    border: solid 1px green;
+    height: 100px;
+}
+
+.inputCol{
+    float: left;
+    width: 10px;
+    border: solid 1px red;
+    height: 100px;
+}
+
