@@ -19,6 +19,8 @@ var $canvas;
 var $textArea;
 var inputCol;
 var outputCol;
+var moduleTypeNumHash = {};
+
 function initializeVariables(){
 	$modules = $('.module');
 	$canvas = $('#canvas');	
@@ -26,6 +28,16 @@ function initializeVariables(){
 	$textArea = $('#serial-textarea');
 	inputCol="inputCol";
 	outputCol="outputCol";
+
+	//initialize hash of module id's
+	moduleTypeNumHash['Input'] = 0;
+	moduleTypeNumHash['Output'] = 1;
+	moduleTypeNumHash['Gain'] = 2;
+	moduleTypeNumHash['Filter'] = 3;
+	moduleTypeNumHash['Delay'] = 4;
+	moduleTypeNumHash['Oscillator'] = 5;
+	moduleTypeNumHash['Compressor'] = 6;
+	moduleTypeNumHash['Summer'] = 7;
 }
 
 
@@ -63,6 +75,11 @@ function initializeDraggables(){
 	// });
 
 	
+}
+
+
+function getModuleTypeNumFromId(idNum){
+	return moduleTypeNumHash[$("#"+idNum).text()];
 }
 
 //args: none
@@ -150,74 +167,9 @@ function makeDraggable(divID){
     });
 }
 
-//args:none
-//return value: currently none, eventually send over USB
-//contract: parse CONNECTED sound modules on canvas into following list
-//#num modules (not including input and output)
-//Input: outputModuleID, outputModuleID
-//Node: outputModuleID
-function serialize(){
-	console.log("serializing");
-	//Traverse "tree" of sound modules
-	//start at input module, go depth first preorder
-	var $inputModule = $("#0");
-	connectionsList = getOutputs("#0");
-	//parse the connections list from getOutputs
-	$(connectionsList).each(function(index,value){
-		if( index != 1){
-			var string = "id: " + index +", module:" + $("#"+index).text() + 
-				"; ";
-			//for each output, append it to the string and finally close with a period
-			console.log("index is "+ index);
-			$(connectionsList[index].outputs).each(function(id,val){
-				console.log("output num" + val);
-			});
-		}
-	});
-
-	//print out schema in appropriate format in textarea
-	$textArea.val(connectionsList);
-}
 
 
 
-//javascript class for 
-var Node = function(output){
-	this.outputs = [];
-	this.outputs.push(output);
-};
-//args: curNodeID, id of node
-//return value: a list containing IDs of sound modules that curNodeID's 
-//outputs are connected to
-function getOutputs(curNodeID){
-	var $curNode = $(curNodeID);
-	console.log("getting connections");
-	//obtain list of all connections
-	var connectionList = jsPlumb.getConnections(); 
-	console.log(connectionList);
-	//nodes List is a dictionary of node entries
-	var nodesList = [];
-	$(connectionList).each(function(index,value){
-		console.log("index is "+ index);
-		//create new instance in nodelist if the connection's
-		//source module hasn't been registered yet
-		var id = value.sourceId;
-		console.log("id is " + id);
-		var output = value.target.parentNode.id;
-		console.log("new output node is " + output);
-		console.log("nodesList so far is " + nodesList);
-		if(!(id in nodesList)){
-			nodesList[id] = new Node(output);
-		} else{
-			//add this connection's target to its source's entry's output list
-			nodesList[id].outputs.push(value.target.parentNode.id);
-		}
-	});
-	console.log("Printing out list of node Ids");
-	console.log(nodesList);
-	return nodesList;
-	//$(this).find('._jsPlumb_endpoint_anchor_').each(function(i,e){
-}
 
 
 
