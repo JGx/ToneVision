@@ -19,12 +19,11 @@ sample* init_buffer(unsigned int len) {
 }
 
 // advances pointer to next index and wraps pointer if necessary
+// TODO switch to using modulus
 sample* adv_buffer(sample* head, sample* inPos, unsigned int len) {
   if((inPos-head) >= (len-1)) {
-    //Serial.println(1);
     return inPos+1-len;
   } else {
-    //Serial.println(2);
     return inPos+1;
   }
 }

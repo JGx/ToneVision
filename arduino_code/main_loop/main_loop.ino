@@ -16,9 +16,10 @@
 unsigned short LEDState;
 
 // instantiate modules
-delay_line delay1;
-gain gain1;
-summer summer1;
+//generic delay1;
+//generic gain1;
+//generic summer1;
+generic modList[3];
 
 // instantiate signals
 sample summerOut;
@@ -47,10 +48,14 @@ void setup() {
   summerOutPtr = &summerOut;
   feedbackOutPtr = &feedbackOut;
   
+  int delayList[3] = {(int) summerOutPtr, (int) currOutSamplePtr, (int) 15000};
+  int gainList[4] = {(int) currOutSamplePtr, (int) feedbackOutPtr, (int) 1, (int) LINEAR};
+  int summerList[3] = {(int) currInSamplePtr, (int) feedbackOutPtr, (int) summerOutPtr};
+  
   // initialize modules
-  delay1 = new_delay_line(summerOutPtr, currOutSamplePtr, 15000);
-  gain1 = new_gain(currOutSamplePtr, feedbackOutPtr, 1, LINEAR);
-  summer1 = new_summer(currInSamplePtr, feedbackOutPtr, summerOutPtr);
+  modList[0] = new_generic(DELAY_ID, delayList);
+  modList[1] = new_generic(GAIN_ID, gainList);
+  modList[2] = new_generic(SUMMER_ID, summerList);
   
   // allow interrupts
   interrupts();
@@ -71,9 +76,9 @@ void TC4_Handler()
   get_sample(currInSamplePtr);
   
   // do processing here
-  summer1->proc(summer1);
-  delay1->proc(delay1, knob0);
-  gain1->proc(gain1, knob1);
+  modList[0]->proc(modList[0], knob0);
+  modList[1]->proc(modList[1], knob1);
+  modList[2]->proc(modList[2], NULL);
   // throughput
 //  *(currOutSamplePtr) = *(currInSamplePtr);
   

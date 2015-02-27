@@ -2,12 +2,13 @@
 #define DEFINES_H
 
 // typedefs
-typedef short sample;          // type for each audio sample
-typedef unsigned char uint8;   // generic
-typedef unsigned int param;    // type for input parameters to functions
+typedef short sample;        // type for each audio sample
+typedef unsigned char uint8; // generic
+typedef unsigned int param;  // type for input parameters to functions
+typedef int genericParam;    // type of parameter lists
+typedef unsigned short id;   // type for module ID numbers
 
 // defines
-#define U_BUFFER_LEN   22000
 #define SIZE_OF_SAMPLE 2 
 
 // globals

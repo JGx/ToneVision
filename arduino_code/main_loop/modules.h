@@ -13,6 +13,8 @@
 // -> GENERIC
 // this will be the generic format for each module struct
 // to be used as a place holder for compiler when calling arbitrary modules 
+// when each module is created, it will have a generic pointer
+// the module will be called from that generic pointer
 typedef struct generic_struct* generic;
 // struct
 struct generic_struct {
@@ -22,8 +24,11 @@ struct generic_struct {
   void* structData; // pointer to an array of all inputs/outputs/data for each module
 };
 
+generic new_generic(id modID, int* list);
+
 // -> DELAY LINE
 typedef struct delay_line_struct* delay_line;
+#define DELAY_ID 1
 #define MIN_DELAY 800
 // struct
 struct delay_line_struct {
@@ -39,10 +44,11 @@ struct delay_line_struct {
 // internal funcs
 void proc_delay_line(delay_line self, param paramDelay); // function that actually performs the delay
 // external funcs
-delay_line new_delay_line(sample* in, sample* out, unsigned int maxLen); // instantiates a new delay_line struct (I will call them objects)
+generic new_delay_line(sample* in, sample* out, unsigned int maxLen); // instantiates a new delay_line struct (I will call them objects)
 
 // -> GAIN
 typedef struct gain_struct* gain;
+#define GAIN_ID 2
 #define LINEAR 0
 #define LOG 1
 // struct
@@ -58,10 +64,11 @@ struct gain_struct {
 // internal funcs
 void proc_gain(gain self, param paramGain); 
 // external funcs 
-gain new_gain(sample* in, sample* out, unsigned short maxGain, bool type);
+generic new_gain(sample* in, sample* out, unsigned short maxGain, bool type);
 
 // -> SUMMER
 typedef struct summer_struct* summer;
+#define SUMMER_ID 3
 // struct
 struct summer_struct {
   // functions
@@ -74,6 +81,6 @@ struct summer_struct {
 // internal funcs
 void proc_summer(summer self);
 // external funcs
-summer new_summer(sample* inOne, sample* inTwo, sample* out);
+generic new_summer(sample* inOne, sample* inTwo, sample* out);
 
 #endif
