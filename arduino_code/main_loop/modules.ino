@@ -22,7 +22,7 @@ generic new_generic(id modID, int* list) {
 
 // -> DELAY LINE
 void proc_delay_line(delay_line self, param paramDelay) {
-  unsigned int toDelay = map(paramDelay, 0, 255, 800, self->len);
+  unsigned int toDelay = map(paramDelay, 0, 255, 1500, self->len);
   *(self->buffPos) = 0;
   *(self->buffPos) = *(self->input);
   *(self->output) = access_buffer(self->buffHead, self->buffPos, self->len, toDelay);
@@ -70,7 +70,14 @@ generic new_gain(sample* in, sample* out, unsigned short maxGain, bool type) {
 
 // -> SUMMER
 void proc_summer(summer self) {
-  *(self->output) = *(self->inputOne) + *(self->inputTwo);
+  sample sum = *(self->inputOne) + *(self->inputTwo);
+  if (sum > 2048) {
+    *(self->output) = 2048;
+  } else if (sum < -2048) {
+    *(self->output) = -2048;
+  } else {
+    *(self->output) = sum;
+  }
 }
 
 generic new_summer(sample* inOne, sample* inTwo, sample* out) {

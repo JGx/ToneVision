@@ -20,16 +20,12 @@ sample* init_buffer(unsigned int len) {
 
 // advances pointer to next index and wraps pointer if necessary
 // TODO switch to using modulus
-sample* adv_buffer(sample* head, sample* inPos, unsigned int len) {
-  if((inPos-head) >= (len-1)) {
-    return inPos+1-len;
-  } else {
-    return inPos+1;
-  }
+sample* adv_buffer(sample* head, sample* inPos, int len) {
+  return head + (int)(inPos-head + 1)%len;
 }
 
 // returns value from the buffer offset by a number of samples
 sample access_buffer(sample* head, sample* currPos, unsigned int len, unsigned int offset) {
-    return *(head + (int)(currPos-head + offset)%len);
+  return *(head + (int)(currPos-head + offset)%len);
 }
 

@@ -8,10 +8,10 @@
 #define ADC_CH_MASK 0x02CC0
 
 // globals
-uint8 knob0;
-uint8 knob1;
-uint8 knob2;
-uint8 knob3;
+int knob0;
+int knob1;
+int knob2;
+int knob3;
 
 // function prototypes
 void init_ADC();                // initialize ADC

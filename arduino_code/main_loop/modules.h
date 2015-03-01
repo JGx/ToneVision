@@ -37,8 +37,8 @@ struct delay_line_struct {
   // data
   sample* input;    // pointer to the input sample to the delay line
   sample* output;   // pointer to the output sapmple of the delay line
-  sample* buffHead;     // a buffer that is the length of the maximum number of samples that can be delayed
-  unsigned int len; // the length of the buffer
+  sample* buffHead; // a buffer that is the length of the maximum number of samples that can be delayed
+  int len;          // the length of the buffer
   sample* buffPos;  // points to the current buffer position
 };
 // internal funcs

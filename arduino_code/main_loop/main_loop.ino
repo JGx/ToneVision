@@ -16,9 +16,6 @@
 unsigned short LEDState;
 
 // instantiate modules
-//generic delay1;
-//generic gain1;
-//generic summer1;
 generic modList[3];
 
 // instantiate signals
