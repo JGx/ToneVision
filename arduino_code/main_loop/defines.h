@@ -4,7 +4,7 @@
 // typedefs
 typedef short sample;        // type for each audio sample
 typedef unsigned char uint8; // generic
-typedef unsigned int param;  // type for input parameters to functions
+typedef short param;         // type for input parameters to functions
 typedef int genericParam;    // type of parameter lists
 typedef unsigned short id;   // type for module ID numbers
 
@@ -12,10 +12,8 @@ typedef unsigned short id;   // type for module ID numbers
 #define SIZE_OF_SAMPLE 2 
 
 // globals
-sample  currInSample = 0;
-sample* currInSamplePtr = &currInSample; // points to current sample
-sample  currOutSample = 0;
-sample* currOutSamplePtr = &currOutSample;
+sample* currInSamplePtr; // points to current sample
+sample* currOutSamplePtr;
 
 // table of 256 linearly distributed fractions between 0 and 1
 float linearLUT[256] = {

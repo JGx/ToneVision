@@ -28,7 +28,8 @@ generic new_generic(id modID, int* list);
 
 // -> DELAY LINE
 typedef struct delay_line_struct* delay_line;
-#define DELAY_ID 1
+#define DELAY_ID 0
+#define NUM_DELAY_ARGS 1 // number of arguments to new_delay_line func (not including sample in and out)
 #define MIN_DELAY 800
 // struct
 struct delay_line_struct {
@@ -48,7 +49,8 @@ generic new_delay_line(sample* in, sample* out, unsigned int maxLen); // instant
 
 // -> GAIN
 typedef struct gain_struct* gain;
-#define GAIN_ID 2
+#define GAIN_ID 1
+#define NUM_GAIN_ARGS 2
 #define LINEAR 0
 #define LOG 1
 // struct
@@ -68,7 +70,8 @@ generic new_gain(sample* in, sample* out, unsigned short maxGain, bool type);
 
 // -> SUMMER
 typedef struct summer_struct* summer;
-#define SUMMER_ID 3
+#define SUMMER_ID 2
+#define NUM_SUMMER_ARGS 1 // this 1 argument is the second sample to be summed, treat it as netList index
 // struct
 struct summer_struct {
   // functions
@@ -82,5 +85,9 @@ struct summer_struct {
 void proc_summer(summer self);
 // external funcs
 generic new_summer(sample* inOne, sample* inTwo, sample* out);
+
+#define TOTAL_NUM_MODULES 3 // the total number of modules available
+// global array that lists the number of arguments for each module
+const int NUMARGSLIST[TOTAL_NUM_MODULES] = {NUM_DELAY_ARGS, NUM_GAIN_ARGS, NUM_SUMMER_ARGS};
 
 #endif

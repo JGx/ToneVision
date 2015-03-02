@@ -7,8 +7,7 @@ sample* init_buffer(unsigned int len) {
   
   if(buff) {
     // initialize all vals to 0
-    unsigned short i;
-    for(i=0; i<len; i++) {
+    for(int i=0; i<len; i++) {
       buff[i] = 0;
     }
     // return pointer to first element
@@ -19,7 +18,6 @@ sample* init_buffer(unsigned int len) {
 }
 
 // advances pointer to next index and wraps pointer if necessary
-// TODO switch to using modulus
 sample* adv_buffer(sample* head, sample* inPos, int len) {
   return head + (int)(inPos-head + 1)%len;
 }

@@ -10,19 +10,13 @@
 #include "DAC.h"
 #include "modules.h"
 #include "buffer.h"
+#include "comm.h"
 
 // various debug
 #define LED_OB 13 // on board LED
 unsigned short LEDState;
 
-// instantiate modules
 generic modList[3];
-
-// instantiate signals
-sample summerOut;
-sample* summerOutPtr;
-sample feedbackOut;
-sample* feedbackOutPtr;
 
 void setup() {
   // stop interrupts
@@ -38,16 +32,15 @@ void setup() {
   init_timer();
   init_ADC();
   init_DAC();
+
+  // instantiate signals
+  netList = inst_nets(4);
+  currInSamplePtr = netList[0];  // always set input to first member of netlist
+  currOutSamplePtr = netList[1]; // always set output to second member of netlist
   
-  // initialize signals
-  summerOut = 0;
-  feedbackOut = 0;
-  summerOutPtr = &summerOut;
-  feedbackOutPtr = &feedbackOut;
-  
-  int delayList[3] = {(int) summerOutPtr, (int) currOutSamplePtr, (int) 15000};
-  int gainList[4] = {(int) currOutSamplePtr, (int) feedbackOutPtr, (int) 1, (int) LINEAR};
-  int summerList[3] = {(int) currInSamplePtr, (int) feedbackOutPtr, (int) summerOutPtr};
+  int delayList[3] = {(int) netList[2], (int) netList[1], (int) 15000};
+  int gainList[4] = {(int) netList[1], (int) netList[3], (int) 1, (int) LINEAR};
+  int summerList[3] = {(int) netList[0], (int) netList[3], (int) netList[2]};
   
   // initialize modules
   modList[0] = new_generic(DELAY_ID, delayList);
