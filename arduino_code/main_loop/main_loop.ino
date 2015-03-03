@@ -16,8 +16,6 @@
 #define LED_OB 13 // on board LED
 unsigned short LEDState;
 
-generic modList[3];
-
 void setup() {
   // stop interrupts
   noInterrupts();
@@ -33,19 +31,16 @@ void setup() {
   init_ADC();
   init_DAC();
 
+  // get serial data
+  get_serial_data();
+
   // instantiate signals
-  netList = inst_nets(4);
+  netList = inst_nets(numNets);
   currInSamplePtr = netList[0];  // always set input to first member of netlist
   currOutSamplePtr = netList[1]; // always set output to second member of netlist
   
-  int delayList[3] = {(int) netList[2], (int) netList[1], (int) 15000};
-  int gainList[4] = {(int) netList[1], (int) netList[3], (int) 1, (int) LINEAR};
-  int summerList[3] = {(int) netList[0], (int) netList[3], (int) netList[2]};
-  
-  // initialize modules
-  modList[0] = new_generic(DELAY_ID, delayList);
-  modList[1] = new_generic(GAIN_ID, gainList);
-  modList[2] = new_generic(SUMMER_ID, summerList);
+  // instantiate modules
+  inst_modules();
   
   // allow interrupts
   interrupts();

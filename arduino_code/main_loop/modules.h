@@ -3,9 +3,12 @@
 
 #include "defines.h"
 
-// ********************
-// processing modules *
-// ********************
+// general functions
+void inst_modules(void); // given all comm data, instantiates each module
+
+// **********************
+// * PROCESSING MODULES *
+// **********************
 
 // for help with function pointers see this link:
 // http://stackoverflow.com/questions/840501/how-do-function-pointers-in-c-work
@@ -24,7 +27,7 @@ struct generic_struct {
   void* structData; // pointer to an array of all inputs/outputs/data for each module
 };
 
-generic new_generic(id modID, int* list);
+generic new_generic(id modID, sample* in, sample* out, int* list);
 
 // -> DELAY LINE
 typedef struct delay_line_struct* delay_line;
@@ -84,7 +87,7 @@ struct summer_struct {
 // internal funcs
 void proc_summer(summer self);
 // external funcs
-generic new_summer(sample* inOne, sample* inTwo, sample* out);
+generic new_summer(sample* inOne, sample* out, int inTwoIndex);
 
 #define TOTAL_NUM_MODULES 3 // the total number of modules available
 // global array that lists the number of arguments for each module

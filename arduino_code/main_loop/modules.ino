@@ -1,18 +1,32 @@
 #include "modules.h"
 
+void inst_modules() {
+  // instantiate module list 
+  modList = (generic*) malloc(numMods*sizeof(generic));
+  
+  // instantiate each module
+  for(int i=0; i<numMods; i++) {
+    modList[i] = new_generic(modIDList[i], netList[inList[i]], netList[outList[i]], parsedArgList[i]);
+  }
+}
+
+// **********************
+// * PROCESSING MODULES *
+// **********************
+
 // -> GENERIC
 // generic "new" function for all types of modules
 // "list" is an array of all the data that needs to be set in the struct
-generic new_generic(id modID, int* list) {
+generic new_generic(id modID, sample* in, sample* out, int* list) {
   switch(modID) {
     case DELAY_ID:
-      return new_delay_line((sample*) list[0], (sample*) list[1], (unsigned int) list[2]);
+      return new_delay_line(in, out, (unsigned int) list[0]);
       break;
     case GAIN_ID:
-      return new_gain((sample*) list[0], (sample*) list[1], (unsigned short) list[2], (bool) list[3]);
+      return new_gain(in, out, (unsigned short) list[0], (bool) list[1]);
       break;
     case SUMMER_ID:
-      return new_summer((sample*) list[0], (sample*) list[1], (sample*) list[2]);
+      return new_summer(in, out, list[0]);
       break;
     default:
       return NULL;
@@ -80,12 +94,12 @@ void proc_summer(summer self) {
   }
 }
 
-generic new_summer(sample* inOne, sample* inTwo, sample* out) {
+generic new_summer(sample* inOne, sample* out, int inTwoIndex) {
   // allocate memory for this summer object
   summer self = (summer) malloc(sizeof(struct summer_struct));
   // set the input and output pointers
   self->inputOne = inOne;
-  self->inputTwo = inTwo;
+  self->inputTwo = netList[inTwoIndex];
   self->output = out;
   // set the functions pointers
   self->proc = &proc_summer;
