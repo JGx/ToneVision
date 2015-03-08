@@ -4,7 +4,7 @@
 #include "defines.h"
 
 // analog inputs 
-#define IN_ADC_CH 7 // ADC channel for A0 positive part of wave 
+#define IN_ADC_CH 7 // ADC channel for A0 
 #define ADC_CH_MASK 0x02CC0
 
 // globals

@@ -107,4 +107,6 @@ int** parse_args(int num, int* list, int* IDlist) {
     // update list index
     currListIndex = currListIndex + currNumParams;
   }
+  
+  return parsed_list;
 }
