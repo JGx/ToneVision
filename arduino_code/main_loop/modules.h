@@ -32,8 +32,7 @@ generic new_generic(id modID, sample* in, sample* out, int* list);
 // -> DELAY LINE
 typedef struct delay_line_struct* delay_line;
 #define DELAY_ID 0
-#define NUM_DELAY_ARGS 1 // number of arguments to new_delay_line func (not including sample in and out)
-#define MIN_DELAY 800
+#define NUM_DELAY_ARGS 2 // number of arguments to new_delay_line func (not including sample in and out)
 // struct
 struct delay_line_struct {
   // functions
@@ -42,13 +41,14 @@ struct delay_line_struct {
   sample* input;    // pointer to the input sample to the delay line
   sample* output;   // pointer to the output sapmple of the delay line
   sample* buffHead; // a buffer that is the length of the maximum number of samples that can be delayed
+  int minDelay;     // minimum delay length
   int len;          // the length of the buffer
   sample* buffPos;  // points to the current buffer position
 };
 // internal funcs
 void proc_delay_line(delay_line self, param paramDelay); // function that actually performs the delay
 // external funcs
-generic new_delay_line(sample* in, sample* out, unsigned int maxLen); // instantiates a new delay_line struct (I will call them objects)
+generic new_delay_line(sample* in, sample* out, unsigned int minLen, unsigned int maxLen); // instantiates a new delay_line struct (I will call them objects)
 
 // -> GAIN
 typedef struct gain_struct* gain;

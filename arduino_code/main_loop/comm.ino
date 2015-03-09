@@ -52,13 +52,13 @@ void get_serial_data() {
   }
   
   // get number of args
-  const int debugNumArgs = 7;
+  const int debugNumArgs = 8;
   numArgs = debugNumArgs;
   
   // instantiate arg array 
   argList = (int*) malloc(numArgs*sizeof(int));
   
-  int debugArgList[debugNumArgs] = {15000,2,5,1,LINEAR,1,LINEAR};
+  int debugArgList[debugNumArgs] = {8000,15000,2,5,1,LINEAR,1,LINEAR};
   // populate argument list
   for(int i=0; i<numArgs; i++) {
     argList[i] = debugArgList[i];

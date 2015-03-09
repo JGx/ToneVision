@@ -22,7 +22,7 @@ generic new_generic(id modID, sample* in, sample* out, int* list) {
     case DELAY_ID:
       Serial.print("list[0] in new_generic for delay: ");
       Serial.println(list[0]);
-      return new_delay_line(in, out, (unsigned int) list[0]);
+      return new_delay_line(in, out, (unsigned int) list[0], (unsigned int) list[1]);
       break;
     case GAIN_ID:
       return new_gain(in, out, (unsigned short) list[0], (bool) list[1]);
@@ -38,20 +38,21 @@ generic new_generic(id modID, sample* in, sample* out, int* list) {
 
 // -> DELAY LINE
 void proc_delay_line(delay_line self, param paramDelay) {
-  unsigned int toDelay = map(paramDelay, 0, 255, 1500, self->len);
+  unsigned int toDelay = map(paramDelay, 0, 255, self->minDelay, self->len);
   *(self->buffPos) = 0;
   *(self->buffPos) = *(self->input);
   *(self->output) = access_buffer(self->buffHead, self->buffPos, self->len, toDelay);
   self->buffPos = adv_buffer(self->buffHead, self->buffPos, self->len);
 }
 
-generic new_delay_line(sample* in, sample* out, unsigned int maxLen) {
+generic new_delay_line(sample* in, sample* out, unsigned int minLen, unsigned int maxLen) {
   // allocate the memory for this delay line object
   delay_line self = (delay_line) malloc(sizeof(struct delay_line_struct));
   // set the input and output pointers
   self->input = in;
   self->output = out;
   // allocate memory for buffer
+  self->minDelay = minLen;
   self->len = maxLen;
   self->buffHead = init_buffer(maxLen);
   self->buffPos = self->buffHead;
