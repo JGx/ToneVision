@@ -62,8 +62,10 @@ void TC4_Handler()
   
   // do processing here
   modList[0]->proc(modList[0], knob0);
-  modList[1]->proc(modList[1], knob1);
+  modList[1]->proc(modList[1], NULL);
   modList[2]->proc(modList[2], NULL);
+  modList[3]->proc(modList[3], knob1);
+  modList[4]->proc(modList[4], knob2);
   // throughput
 //  *(currOutSamplePtr) = *(currInSamplePtr);
   

@@ -10,9 +10,9 @@ void init_ADC() {
   knob2 = 0;
   knob3 = 0;
   
-  ADC->ADC_MR |= 0x80;   // DAC in free running mode.
-  ADC->ADC_CR=2;         // Starts ADC conversion.
-  ADC->ADC_CHER=0x2CC0;  // Enable ADC channels 0, 1, 10, 11, 12, 13. 
+  ADC->ADC_MR |= 0x80;        // DAC in free running mode.
+  ADC->ADC_CR=2;              // Starts ADC conversion.
+  ADC->ADC_CHER=ADC_CH_MASK;  // Enable ADC channels 0, 1, 10, 11, 12, 13. 
 }
 
 void get_sample(sample* inPos) {

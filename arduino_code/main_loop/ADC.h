@@ -5,7 +5,7 @@
 
 // analog inputs 
 #define IN_ADC_CH 7 // ADC channel for A0 
-#define ADC_CH_MASK 0x02CC0
+#define ADC_CH_MASK 0x03CC0
 
 // globals
 int knob0;
