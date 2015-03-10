@@ -14,11 +14,21 @@ void init_timer() {
   TC_SetRC(TC1, 1, 238); // sets <> 44.1 Khz interrupt rate
   TC_Start(TC1, 1);
   
-  // enable timer interrupts on the timer 
-  TC1->TC_CHANNEL[1].TC_IER=TC_IER_CPCS;
-  TC1->TC_CHANNEL[1].TC_IDR=~TC_IER_CPCS;
+  enable_TC();
   
   /* Enable the interrupt in the nested vector interrupt controller */
   /* TC4_IRQn where 4 is the timer number * timer channels (3) + the channel number (=(1*3)+1) for timer1 channel1 */
   NVIC_EnableIRQ(TC4_IRQn);
+}
+
+void enable_TC() {
+  // enable timer interrupts on the timer 
+  TC1->TC_CHANNEL[1].TC_IER=TC_IER_CPCS;
+  TC1->TC_CHANNEL[1].TC_IDR=~TC_IER_CPCS;
+}
+
+void disable_TC() {
+  // enable timer interrupts on the timer 
+  TC1->TC_CHANNEL[1].TC_IER=~TC_IER_CPCS;
+  TC1->TC_CHANNEL[1].TC_IDR=TC_IER_CPCS;
 }

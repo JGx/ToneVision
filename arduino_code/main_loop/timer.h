@@ -5,4 +5,6 @@
 
 // function prototypes
 void init_timer();
+void enable_TC();
+void disable_TC();
 #endif

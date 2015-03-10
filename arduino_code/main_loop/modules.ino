@@ -20,8 +20,6 @@ void inst_modules() {
 generic new_generic(id modID, sample* in, sample* out, int* list) {
   switch(modID) {
     case DELAY_ID:
-      Serial.print("list[0] in new_generic for delay: ");
-      Serial.println(list[0]);
       return new_delay_line(in, out, (unsigned int) list[0], (unsigned int) list[1]);
       break;
     case GAIN_ID:

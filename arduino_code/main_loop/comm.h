@@ -3,6 +3,10 @@
 
 #include "defines.h"
 
+// defines
+// communication flags
+#define READY 128
+
 // globals
 int numMods; // number of modules in effect
 // for the following arrays, the array index corresponds to an individual module
@@ -24,10 +28,9 @@ int* argList; // array containing all arguments for each module
 int** parsedArgList; // 2d array where each row corresponds to a single module
 
 // function prototypes
-generic inst_modules(int num, int* list);            // instatiates each module
 sample** inst_nets(int num);                         // instantiates each net sample
-
 void get_serial_data(void);                          // function that communicates with web app
+
 // num = number of modules
 // list = straight list
 // IDlist = list of module IDs

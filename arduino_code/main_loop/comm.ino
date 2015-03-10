@@ -72,8 +72,6 @@ int** parse_args(int num, int* list, int* IDlist) {
   int** parsed_list;                              // instantiate parsed list of args
   parsed_list = (int**) malloc(num*sizeof(int*)); // allocate memory for array of args (one index for each module)
   int currListIndex = 0;                          // keeps track of index in big list
-  Serial.println("in parse args");
-  Serial.println("listing IDs");
   for(int i=0; i<num; i++) {
     int currID = modIDList[i];     // current module ID we are looking at
     int currNumParams = NUMARGSLIST[currID];      // number of parameters for module we are looking at 

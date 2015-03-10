@@ -11,10 +11,15 @@
 #include "modules.h"
 #include "buffer.h"
 #include "comm.h"
+#include "flash.h"
+#include "DueFlashStorage.h"
 
 // various debug
 #define LED_OB 13 // on board LED
 unsigned short LEDState;
+int intRead;
+int* intStoredPtr;
+int intStored;
 
 void setup() {
   // stop interrupts
@@ -24,6 +29,8 @@ void setup() {
   LEDState = 0;
   pinMode(LED_OB, OUTPUT);
   digitalWrite(LED_OB, LOW);
+  
+  // turn serial on
   Serial.begin(9600);
   
   // init functions
@@ -48,6 +55,16 @@ void setup() {
 
 void loop() {
   read_knobs();
+//  if(Serial.available()) {
+//    // need to disable TC to make Serial.read() work
+//    disable_TC();
+//    intRead = Serial.parseInt();
+//    writeInt(0,&intRead);
+//    enable_TC();
+//  }
+//  intStoredPtr = (int*)dueFlashStorage.readAddress(0);
+//  intStored = *intStoredPtr;
+//  Serial.println(intStored);
 }
 
 // interrupt handler for samples
