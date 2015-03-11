@@ -23,12 +23,12 @@ void init_timer() {
 
 void enable_TC() {
   // enable timer interrupts on the timer 
-  TC1->TC_CHANNEL[1].TC_IER=CPCS_MASK;
-  TC1->TC_CHANNEL[1].TC_IDR=~CPCS_MASK;
+  TC1->TC_CHANNEL[1].TC_IER=TC_IER_CPCS;
+  TC1->TC_CHANNEL[1].TC_IDR=~TC_IER_CPCS;
 }
 
 void disable_TC() {
   // enable timer interrupts on the timer 
-  TC1->TC_CHANNEL[1].TC_IER=~CPCS_MASK;
-  TC1->TC_CHANNEL[1].TC_IDR=CPCS_MASK;
+  TC1->TC_CHANNEL[1].TC_IER=~TC_IER_CPCS;
+  TC1->TC_CHANNEL[1].TC_IDR=TC_IER_CPCS;
 }

@@ -17,10 +17,14 @@
 // various debug
 #define LED_OB 13 // on board LED
 unsigned short LEDState;
+const int debugArrayConst[27] = {27, 5, 0, 2, 2, 1, 1, 6, 3, 0, 4, 4, 0, 4, 3, 1, 2, 5, 8, 8000, 15000, 2, 5, 1, 1, 1, 1};
 
 void setup() {
   // stop interrupts
   noInterrupts();
+  
+  // default to false
+  fatalError = false;
   
   // various debug
   LEDState = 0;
@@ -30,23 +34,29 @@ void setup() {
   // turn serial on
   Serial.begin(9600);
   
-  // init functions
-  init_timer(); // turning on the timer interrupt breaks serial
-  init_ADC();
-  init_DAC();
-  
   // get serial data
+//  int* debugArray = (int*) debugArrayConst;
   int* prevList = readIntArray(MEM_START); // pull list from flash (from previous power cycle)
   parse_serial_data(prevList);
 
-  // instantiate signals
-  // TODO make isnt_nets() look like inst_modules()
-  netList = inst_nets(numNets);
-  currInSamplePtr = netList[0];  // always set input to first member of netlist
-  currOutSamplePtr = netList[1]; // always set output to second member of netlist
+  // set default values for currIn/OutSamplePtr
+  currInSamplePtr = (sample*)malloc(sizeof(sample));
+  currOutSamplePtr = (sample*)malloc(sizeof(sample));
+
+  if(!fatalError) { // check for fatal error
+    // instantiate signals
+    netList = inst_nets();
+    currInSamplePtr = netList[0];  // always set input to first member of netlist
+    currOutSamplePtr = netList[1]; // always set output to second member of netlist
+    
+    // instantiate modules
+    inst_modules();
+  }
   
-  // instantiate modules
-  inst_modules();
+  // init functions
+  init_timer(); 
+  init_ADC();
+  init_DAC();
   
   // allow interrupts
   interrupts();
@@ -68,13 +78,16 @@ void TC4_Handler()
   get_sample(currInSamplePtr);
   
   // do processing here
-  modList[0]->proc(modList[0], knob0);
-  modList[1]->proc(modList[1], NULL);
-  modList[2]->proc(modList[2], NULL);
-  modList[3]->proc(modList[3], knob1);
-  modList[4]->proc(modList[4], knob2);
-  // throughput
-//  *(currOutSamplePtr) = *(currInSamplePtr);
+  if(fatalError) { // if fatal error, default to throughput
+    // throughput
+    *(currOutSamplePtr) = *(currInSamplePtr);
+  } else {
+    modList[0]->proc(modList[0], knob0);
+    modList[1]->proc(modList[1], NULL);
+    modList[2]->proc(modList[2], NULL);
+    modList[3]->proc(modList[3], knob1);
+    modList[4]->proc(modList[4], knob2);
+  }
   
   // output sample to DAC
   out_sample(currOutSamplePtr);

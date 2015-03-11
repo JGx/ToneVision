@@ -1,14 +1,14 @@
 #include "comm.h"
 
-sample** inst_nets(int num) {
+sample** inst_nets(void) {
   // create array of pointers to samples
-  sample** ptrArry = (sample**) malloc(num*sizeof(sample*));
+  sample** ptrArry = (sample**) malloc(numNets*sizeof(sample*));
   // instantiate each sample
-  for(int i=0; i<num; i++) {
+  for(int i=0; i<numNets; i++) {
     ptrArry[i] = (sample*) malloc(sizeof(sample));
   }
   // initialize each sample to 0
-  for(int i=0; i<num; i++) {
+  for(int i=0; i<numNets; i++) {
     *(ptrArry[i]) = 0;
   }
   // return pointer to head of array
@@ -19,15 +19,14 @@ void parse_serial_data(int* list) {
   
   if(list == NULL) {  // if no list, jump out of function
     Serial.println("list pointer is NULL");
+    fatalError = true;
     return;
   }
-  
+    
   int currListIndex; // keeps track index in list from web app
   currListIndex = 1; // 0 = total number elements, 1 = numMods
   
   // get number of modules
-//  const int debugNumMods = 5;
-//  numMods = debugNumMods;
   numMods = list[currListIndex]; // second element will always be numMods (first element is total number of elements in li
   currListIndex++;               // increment currListIndex
 
@@ -35,57 +34,70 @@ void parse_serial_data(int* list) {
   // instantiate modID array 
   modIDList = (int*) malloc(numMods*sizeof(int));
   
-//  int debugIDList[debugNumMods] = {DELAY_ID,SUMMER_ID,SUMMER_ID,GAIN_ID,GAIN_ID};
   // populate ID list
-  for(int i; i<numMods; i++) {
+  for(int i=0; i<numMods; i++) {
     modIDList[i] = list[currListIndex+i]; // get mod IDs from big list
-    currListIndex++;                      // keep track of list index
   }
   
+  currListIndex = currListIndex+numMods; // keep track of list index
+  
   // get number of nets
-//  const int debugNumNets = 6;
-//  numNets = debugNumNets;
   numNets = list[currListIndex];
   currListIndex++;
   
   // instantiate input array 
   inList = (int*) malloc(numMods*sizeof(int));
   
-//  int debugInList[debugNumMods] = {3,0,4,4,0};
   // populate module input list
   for(int i=0; i<numMods; i++) {
     inList[i] = list[currListIndex+i];
-    currListIndex++;
   }
+
+  currListIndex = currListIndex+numMods; // keep track of list index
   
   // instantiate output array 
   outList = (int*) malloc(numMods*sizeof(int));
   
-//  int debugOutList[debugNumMods] = {4,3,1,2,5};
   // populate module output list
   for(int i=0; i<numMods; i++) {
     outList[i] = list[currListIndex+i];
-    currListIndex++;
   }
   
+  currListIndex = currListIndex+numMods; // keep track of list index
+  
   // get number of args
-//  const int debugNumArgs = 8;
-//  numArgs = debugNumArgs;
   numArgs = list[currListIndex];
   currListIndex++;
   
   // instantiate arg array 
   argList = (int*) malloc(numArgs*sizeof(int));
   
-//  int debugArgList[debugNumArgs] = {8000,15000,2,5,1,LINEAR,1,LINEAR};
   // populate argument list
   for(int i=0; i<numArgs; i++) {
     argList[i] = list[currListIndex+i];
-    currListIndex++;
   }
 
   // generate parsed list
   parsedArgList = parse_args(numMods, argList, modIDList);
+} 
+
+void check_comm(void) {
+  int* commList = NULL;            // list for storing data from serial
+  
+  if(Serial.available()) {
+    disable_TC();                      // need to disable TC to make Serial.read() work
+    commList = get_serial_data();      // acquire the serial data and store it in an array
+    enable_TC();                       // re-enable timer interrupt
+  }
+  
+  // print commList for debug
+  if(commList != NULL) {
+    writeIntArray(MEM_START,commList); // write list to flash memory
+    int* flashList = readIntArray(MEM_START);
+    for(int i=0; i<flashList[0]; i++) {
+      Serial.println(flashList[i]);
+    }
+  }
 }
 
 int** parse_args(int num, int* list, int* IDlist) {
@@ -109,28 +121,6 @@ int** parse_args(int num, int* list, int* IDlist) {
   return parsed_list;
 }
 
-void check_comm(void) {
-  int* commList = NULL;            // list for storing data from serial
-  
-  
-  if(Serial.available()) {
-    disable_TC();                      // need to disable TC to make Serial.read() work
-    commList = get_serial_data();      // acquire the serial data and store it in an array
-    Serial.print("serial data available");
-    enable_TC();                       // re-enable timer interrupt
-  }
-  
-  // print commList for debug
-  if(commList != NULL) {
-    Serial.print("commList != NULL");
-    writeIntArray(MEM_START,commList); // write list to flash memory
-    int* flashList = readIntArray(MEM_START);
-    for(int i=0; i<flashList[0]; i++) {
-      Serial.println(flashList[i]);
-    }
-  }
-}
-
 int* get_serial_data(void) {
   int numEl = Serial.parseInt();                // get total number of list elements (including this element)
   
@@ -147,3 +137,8 @@ int* get_serial_data(void) {
   
   return list;                                  // return head of array
 }
+
+int* parse_main_list(int* list, int num, int* currIndexPtr) {
+  
+}
+

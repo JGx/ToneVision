@@ -24,15 +24,22 @@ int* argList; // array containing all arguments for each module
 int** parsedArgList; // 2d array where each row corresponds to a single module
 
 // function prototypes
-sample** inst_nets(int num);                         // instantiates each net sample
+sample** inst_nets(void);                            // instantiates each net sample
 void parse_serial_data(int* list);                   // function that parses list from web app
+void check_comm(void);                               // checks if there is serial data available, calls parser function if so
+
+// helper function prototypes
 
 // num = number of modules
 // list = straight list
 // IDlist = list of module IDs
-int** parse_args(int num, int* list, int* IDlist);   // takes a straight list of parameters and converts it to a parsed list
+int** parse_args(int num, int* list, int* IDlist);           // takes a straight list of parameters and converts it to a parsed list
 
-void check_comm(void);                               // checks if there is serial data available, calls parser function if so
-int* get_serial_data(void);                          // if serial data available, gets it and stores it in an array, returns pointer to array, also writes array to flash
+int* get_serial_data(void);                                  // if serial data available, gets it and stores it in an array, returns pointer to array, also writes array to flash
+
+// list = main list to parse from
+// num = number of elements to parse
+// currIndexPtr = pointer to current index the main list
+int* parse_main_list(int* list, int num, int* currIndexPtr); // takes in a main list and parses a chunk of it into a smaller list, returns pointer to smaller list
 
 #endif

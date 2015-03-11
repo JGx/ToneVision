@@ -14,6 +14,7 @@ typedef unsigned short id;   // type for module ID numbers
 // globals
 sample* currInSamplePtr; // points to current sample
 sample* currOutSamplePtr;
+bool fatalError;
 
 // table of 256 linearly distributed fractions between 0 and 1
 float linearLUT[256] = {
