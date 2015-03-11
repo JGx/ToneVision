@@ -31,14 +31,16 @@ void setup() {
   Serial.begin(9600);
   
   // init functions
-  init_timer();
+  init_timer(); // turning on the timer interrupt breaks serial
   init_ADC();
   init_DAC();
-
+  
   // get serial data
-  parse_serial_data();
+  int* prevList = readIntArray(MEM_START); // pull list from flash (from previous power cycle)
+  parse_serial_data(prevList);
 
   // instantiate signals
+  // TODO make isnt_nets() look like inst_modules()
   netList = inst_nets(numNets);
   currInSamplePtr = netList[0];  // always set input to first member of netlist
   currOutSamplePtr = netList[1]; // always set output to second member of netlist

@@ -18,13 +18,17 @@ void writeIntArray(int address, int* toWrite) {
 
 int* readIntArray(int address) {
   int num = *readInt(address);                 // get number of elements
+  Serial.print("num: ");
+  Serial.println(num);
   if(num <= 0) {                               // check for valid number of elements
     return NULL;
   }
   int* list = (int*) malloc(num*sizeof(int));  // allocate memory for list to return
   
+  Serial.println("int readIntArray");
   for(int i=0; i<num; i++) {
     list[i] = *readInt(address+i*sizeof(int)); // read out values from flash
+    Serial.println(list[i]);
   }
   
   return list;
