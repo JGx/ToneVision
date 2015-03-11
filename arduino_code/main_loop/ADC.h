@@ -16,6 +16,6 @@ int knob3;
 // function prototypes
 void init_ADC();                // initialize ADC
 void get_sample(sample* inPos); // get input from two ADCs, add signal together
-void read_knobs();              // read all parameter knobs
+void read_knobs(void);          // read all parameter knobs
 
 #endif

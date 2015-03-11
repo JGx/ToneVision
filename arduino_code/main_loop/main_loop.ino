@@ -17,9 +17,6 @@
 // various debug
 #define LED_OB 13 // on board LED
 unsigned short LEDState;
-int intRead;
-int* intStoredPtr;
-int intStored;
 
 void setup() {
   // stop interrupts
@@ -39,7 +36,7 @@ void setup() {
   init_DAC();
 
   // get serial data
-  get_serial_data();
+  parse_serial_data();
 
   // instantiate signals
   netList = inst_nets(numNets);
@@ -55,16 +52,7 @@ void setup() {
 
 void loop() {
   read_knobs();
-//  if(Serial.available()) {
-//    // need to disable TC to make Serial.read() work
-//    disable_TC();
-//    intRead = Serial.parseInt();
-//    writeInt(0,&intRead);
-//    enable_TC();
-//  }
-//  intStoredPtr = (int*)dueFlashStorage.readAddress(0);
-//  intStored = *intStoredPtr;
-//  Serial.println(intStored);
+  check_comm();
 }
 
 // interrupt handler for samples

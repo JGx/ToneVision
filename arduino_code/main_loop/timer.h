@@ -4,7 +4,7 @@
 #include "defines.h"
 
 // function prototypes
-void init_timer();
-void enable_TC();
-void disable_TC();
+void init_timer(void);
+void enable_TC(void);
+void disable_TC(void);
 #endif

@@ -15,10 +15,11 @@ sample** inst_nets(int num) {
   return ptrArry;
 }
 
-void get_serial_data() {
+void parse_serial_data(void) {
   // get number of modules
   const int debugNumMods = 5;
   numMods = debugNumMods;
+  //numMods = list[1]; // second element will always be numMods (first element is total number of elements in li
   
   // instantiate modID array 
   modIDList = (int*) malloc(numMods*sizeof(int));
@@ -87,4 +88,40 @@ int** parse_args(int num, int* list, int* IDlist) {
   }
   
   return parsed_list;
+}
+
+void check_comm(void) {
+  int* commList = NULL;            // list for storing data from serial
+  
+  if(Serial.available()) {
+    disable_TC();                      // need to disable TC to make Serial.read() work
+    commList = get_serial_data();      // acquire the serial data and store it in an array
+    enable_TC();                       // re-enable timer interrupt
+  }
+  
+  // print commList for debug
+  if(commList != NULL) {
+    writeIntArray(MEM_START,commList); // write list to flash memory
+    int* flashList = readIntArray(MEM_START);
+    for(int i=0; i<flashList[0]; i++) {
+      Serial.println(flashList[i]);
+    }
+  }
+}
+
+int* get_serial_data(void) {
+  int numEl = Serial.parseInt();                // get total number of list elements (including this element)
+  
+  if(numEl <= 0) {                              // check that we have a valid number of elements
+    return NULL;
+  }
+  
+  int* list = (int*) malloc(numEl*sizeof(int)); // instantiate an array for list
+  list[0] = numEl;                              // always set the first element equal number of elements
+  
+  for(int i=1; i<numEl; i++) {
+    list[i] = Serial.parseInt();                // populate list
+  }
+  
+  return list;                                  // return head of array
 }

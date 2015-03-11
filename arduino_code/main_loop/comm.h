@@ -3,12 +3,8 @@
 
 #include "defines.h"
 
-// defines
-// communication flags
-#define READY 128
-
 // globals
-int numMods; // number of modules in effect
+int numMods;   // number of modules in effect
 // for the following arrays, the array index corresponds to an individual module
 // length = numMods for each array
 int* modIDList;   // array of module IDs
@@ -29,11 +25,14 @@ int** parsedArgList; // 2d array where each row corresponds to a single module
 
 // function prototypes
 sample** inst_nets(int num);                         // instantiates each net sample
-void get_serial_data(void);                          // function that communicates with web app
+void parse_serial_data(int* list);                   // function that parses list from web app
 
 // num = number of modules
 // list = straight list
 // IDlist = list of module IDs
 int** parse_args(int num, int* list, int* IDlist);   // takes a straight list of parameters and converts it to a parsed list
+
+void check_comm(void);                               // checks if there is serial data available, calls parser function if so
+int* get_serial_data(void);                          // if serial data available, gets it and stores it in an array, returns pointer to array, also writes array to flash
 
 #endif
