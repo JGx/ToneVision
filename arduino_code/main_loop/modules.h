@@ -36,7 +36,7 @@ typedef struct delay_line_struct* delay_line;
 // struct
 struct delay_line_struct {
   // functions
-  void (*proc)(delay_line self, param paramDelay); // pointer to function that actually performs the delay
+  void (*proc)(delay_line self, param* paramDelay); // pointer to function that actually performs the delay
   // data
   sample* input;    // pointer to the input sample to the delay line
   sample* output;   // pointer to the output sapmple of the delay line
@@ -46,7 +46,7 @@ struct delay_line_struct {
   sample* buffPos;  // points to the current buffer position
 };
 // internal funcs
-void proc_delay_line(delay_line self, param paramDelay); // function that actually performs the delay
+void proc_delay_line(delay_line self, param* paramDelay); // function that actually performs the delay
 // external funcs
 generic new_delay_line(sample* in, sample* out, unsigned int minLen, unsigned int maxLen); // instantiates a new delay_line struct (I will call them objects)
 
@@ -59,7 +59,7 @@ typedef struct gain_struct* gain;
 // struct
 struct gain_struct {
   // functions
-  void (*proc)(gain self, param paramGain);
+  void (*proc)(gain self, param* paramGain);
   // data
   sample* input;          // pointer to the input sample to the delay line
   sample* output;         // pointer to the output sapmple of the delay line
@@ -67,7 +67,7 @@ struct gain_struct {
   bool linlog;            // decides whether block will have linear/log curve
 };
 // internal funcs
-void proc_gain(gain self, param paramGain); 
+void proc_gain(gain self, param* paramGain); 
 // external funcs 
 generic new_gain(sample* in, sample* out, unsigned short maxGain, bool type);
 

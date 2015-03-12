@@ -17,7 +17,6 @@
 // various debug
 #define LED_OB 13 // on board LED
 unsigned short LEDState;
-const int debugArrayConst[27] = {27, 5, 0, 2, 2, 1, 1, 6, 3, 0, 4, 4, 0, 4, 3, 1, 2, 5, 8, 8000, 15000, 2, 5, 1, 1, 1, 1};
 
 void setup() {
   // stop interrupts
@@ -43,7 +42,9 @@ void setup() {
   currInSamplePtr = (sample*)malloc(sizeof(sample));
   currOutSamplePtr = (sample*)malloc(sizeof(sample));
 
-  if(!fatalError) { // check for fatal error
+  // check for fatal error
+  // if no fatal error, go to effect defined by list in flash memory 
+  if(!fatalError) { 
     // instantiate signals
     netList = inst_nets();
     currInSamplePtr = netList[0];  // always set input to first member of netlist
@@ -82,11 +83,11 @@ void TC4_Handler()
     // throughput
     *(currOutSamplePtr) = *(currInSamplePtr);
   } else {
-    modList[0]->proc(modList[0], knob0);
-    modList[1]->proc(modList[1], NULL);
-    modList[2]->proc(modList[2], NULL);
-    modList[3]->proc(modList[3], knob1);
-    modList[4]->proc(modList[4], knob2);
+//    modList[0]->proc(modList[0], knob0);
+//    modList[1]->proc(modList[1], NULL);
+//    modList[2]->proc(modList[2], NULL);
+//    modList[3]->proc(modList[3], knob1);
+//    modList[4]->proc(modList[4], knob2);
   }
   
   // output sample to DAC

@@ -5,10 +5,6 @@ void init_ADC() {
   // code sourced from:
   // http://www.electrosmash.com/pedalshield
   // with modifications by CL
-  knob0 = 0;
-  knob1 = 0;
-  knob2 = 0;
-  knob3 = 0;
   
   ADC->ADC_MR |= 0x80;        // DAC in free running mode.
   ADC->ADC_CR=2;              // Starts ADC conversion.
@@ -29,8 +25,8 @@ void read_knobs() {
   float K = 0.1; // controller gain for knob reading LPF, got this value by experimenting
   // Read knobs
   while((ADC->ADC_ISR & ADC_CH_MASK)!=ADC_CH_MASK);  // wait for ADC 0, 1, 8, 9, 10, 11 conversion complete.
-  knob0 = (int)((float)((int)((ADC->ADC_CDR[10])>>4) - knob0)*K + knob0); // read data from ADC8        
-  knob1 = (int)((float)((int)((ADC->ADC_CDR[11])>>4) - knob1)*K + knob1); // read data from ADC9   
-  knob2 = (int)((float)((int)((ADC->ADC_CDR[12])>>4) - knob2)*K + knob2); // read data from ADC10 
-  knob3 = (int)((float)((int)((ADC->ADC_CDR[13])>>4) - knob3)*K + knob3); // read data from ADC11   
+  knobList[0] = (param)((float)((int)((ADC->ADC_CDR[10])>>4) - knobList[0])*K + knobList[0]); // read data from ADC8        
+  knobList[1] = (param)((float)((int)((ADC->ADC_CDR[11])>>4) - knobList[1])*K + knobList[1]); // read data from ADC9   
+  knobList[2] = (param)((float)((int)((ADC->ADC_CDR[12])>>4) - knobList[2])*K + knobList[2]); // read data from ADC10 
+  knobList[3] = (param)((float)((int)((ADC->ADC_CDR[13])>>4) - knobList[3])*K + knobList[3]); // read data from ADC11   
 }

@@ -35,8 +35,8 @@ generic new_generic(id modID, sample* in, sample* out, int* list) {
 }
 
 // -> DELAY LINE
-void proc_delay_line(delay_line self, param paramDelay) {
-  unsigned int toDelay = map(paramDelay, 0, 255, self->minDelay, self->len);
+void proc_delay_line(delay_line self, param* paramDelay) {
+  unsigned int toDelay = map(*paramDelay, 0, 255, self->minDelay, self->len);
   *(self->buffPos) = 0;
   *(self->buffPos) = *(self->input);
   *(self->output) = access_buffer(self->buffHead, self->buffPos, self->len, toDelay);
@@ -61,11 +61,11 @@ generic new_delay_line(sample* in, sample* out, unsigned int minLen, unsigned in
 }
 
 // -> GAIN
-void proc_gain(gain self, param paramGain) {
+void proc_gain(gain self, param* paramGain) {
   if (self->linlog == LINEAR)
-    *(self->output) = *(self->input)*self->maxGain*linearLUT[paramGain];
+    *(self->output) = *(self->input)*self->maxGain*linearLUT[*paramGain];
   if (self->linlog == LOG)
-    *(self->output) = *(self->input)*self->maxGain*logLUT[paramGain];
+    *(self->output) = *(self->input)*self->maxGain*logLUT[*paramGain];
 }
 
 generic new_gain(sample* in, sample* out, unsigned short maxGain, bool type) {

@@ -49,6 +49,13 @@ void parse_serial_data(int* list) {
   argList = parse_main_list(list, numArgs, &currListIndex);
   // generate parsed list
   parsedArgList = parse_args(numMods, argList, modIDList);
+  
+  // instantiate paramID array
+  paramIDList = parse_main_list(list, numMods, &currListIndex);
+  // instantiate param array
+  paramList = parse_main_list(list, numMods, &currListIndex);
+  // generate instantied param pointer list
+//  paramPtrList = 
 } 
 
 void check_comm(void) {
@@ -120,3 +127,30 @@ int* parse_main_list(int* list, int num, int* currIndexPtr) {
   return listToReturn;
 }
 
+param** create_param_ptrs(int num, int* list, int* IDlist) {
+  // instantiate array 
+  param** toReturn = (param**) malloc(num*sizeof(param*));
+  
+  // iterate through list of params, deal with each modules param
+  for(int i=0; i<num; i++) {
+    // look at each modules param type ID
+    switch(IDlist[i]) {
+      case PARAM_STATIC_ID:
+        toReturn[i] = (param*) malloc(sizeof(param));
+        (*toReturn[i]) = list[i];
+        break;
+      case PARAM_NET_ID:
+        toReturn[i] = (param*) netList[i];
+        break;
+      case PARAM_KNOB_ID:
+        toReturn[i] = (param*) knobList[i];
+      case PARAM_NONE_ID:
+        toReturn[i] = NULL;
+        break;
+      default:
+        toReturn[i] = NULL;
+        break;
+    }
+    return toReturn;
+  }
+}
