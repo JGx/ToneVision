@@ -16,8 +16,8 @@ sample** inst_nets(void) {
 }
 
 void parse_serial_data(int* list) {
-  
-  if(list == NULL) {  // if no list, jump out of function
+  // if no list, jump out of function
+  if(list == NULL) {  
     Serial.println("list pointer is NULL");
     fatalError = true;
     return;
@@ -29,54 +29,24 @@ void parse_serial_data(int* list) {
   // get number of modules
   numMods = list[currListIndex]; // second element will always be numMods (first element is total number of elements in li
   currListIndex++;               // increment currListIndex
-
-  // TODO write helper function for all this shit
   // instantiate modID array 
-  modIDList = (int*) malloc(numMods*sizeof(int));
-  
-  // populate ID list
-  for(int i=0; i<numMods; i++) {
-    modIDList[i] = list[currListIndex+i]; // get mod IDs from big list
-  }
-  
-  currListIndex = currListIndex+numMods; // keep track of list index
+  modIDList = parse_main_list(list, numMods, &currListIndex);
   
   // get number of nets
   numNets = list[currListIndex];
   currListIndex++;
   
   // instantiate input array 
-  inList = (int*) malloc(numMods*sizeof(int));
-  
-  // populate module input list
-  for(int i=0; i<numMods; i++) {
-    inList[i] = list[currListIndex+i];
-  }
-
-  currListIndex = currListIndex+numMods; // keep track of list index
-  
+  inList = parse_main_list(list, numMods, &currListIndex);
   // instantiate output array 
-  outList = (int*) malloc(numMods*sizeof(int));
-  
-  // populate module output list
-  for(int i=0; i<numMods; i++) {
-    outList[i] = list[currListIndex+i];
-  }
-  
-  currListIndex = currListIndex+numMods; // keep track of list index
-  
+  outList = parse_main_list(list, numMods, &currListIndex);
+    
   // get number of args
   numArgs = list[currListIndex];
   currListIndex++;
   
   // instantiate arg array 
-  argList = (int*) malloc(numArgs*sizeof(int));
-  
-  // populate argument list
-  for(int i=0; i<numArgs; i++) {
-    argList[i] = list[currListIndex+i];
-  }
-
+  argList = parse_main_list(list, numArgs, &currListIndex);
   // generate parsed list
   parsedArgList = parse_args(numMods, argList, modIDList);
 } 
@@ -139,6 +109,14 @@ int* get_serial_data(void) {
 }
 
 int* parse_main_list(int* list, int num, int* currIndexPtr) {
+  int* listToReturn = (int*) malloc(num*sizeof(int));
   
+  for(int i=0; i<num; i++) {
+    listToReturn[i] = list[(*currIndexPtr)+i];
+  }
+  
+  (*currIndexPtr) = (*currIndexPtr)+num; // update list index
+  
+  return listToReturn;
 }
 
