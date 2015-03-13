@@ -31,9 +31,9 @@ int numArgs;         // number of total arguments for all modules in effect
 int* argList;        // array containing all arguments for each module
 int** parsedArgList; // 2d array where each row corresponds to a single module
 
-int*  paramIDList;  // array containing the param type for each module
-int*  paramList;    // array containing the actual param for each module
-int** paramPtrList; // array of pointers to actual params that are passed to modules
+int*  paramIDList;    // array containing the param type for each module
+int*  paramList;      // array containing the actual param for each module from web app
+param** paramPtrList; // array of pointers to actual params that are passed to modules
 
 // function prototypes
 sample** inst_nets(void);          // instantiates each net sample
@@ -54,9 +54,6 @@ int* get_serial_data(void);                                  // if serial data a
 // currIndexPtr = pointer to current index the main list
 int* parse_main_list(int* list, int num, int* currIndexPtr); // takes in a main list and parses a chunk of it into a smaller list, returns pointer to smaller list
 
-// num = number of modules
-// list = list of param values
-// IDlist = list of param  types
-param** create_param_ptrs(int num, int* list, int* IDlist);
+param** create_param_ptrs(void);
 
 #endif

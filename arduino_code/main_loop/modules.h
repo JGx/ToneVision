@@ -22,7 +22,7 @@ typedef struct generic_struct* generic;
 // struct
 struct generic_struct {
   // function
-  void (*proc)(generic self, param genericParam);
+  void (*proc)(generic self, param* genericParam);
   // data
   void* structData; // pointer to an array of all inputs/outputs/data for each module
 };

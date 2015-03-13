@@ -34,7 +34,6 @@ void setup() {
   Serial.begin(9600);
   
   // get serial data
-//  int* debugArray = (int*) debugArrayConst;
   int* prevList = readIntArray(MEM_START); // pull list from flash (from previous power cycle)
   parse_serial_data(prevList);
 
@@ -50,6 +49,9 @@ void setup() {
     currInSamplePtr = netList[0];  // always set input to first member of netlist
     currOutSamplePtr = netList[1]; // always set output to second member of netlist
     
+    // instantiate params
+    paramPtrList = create_param_ptrs();
+
     // instantiate modules
     inst_modules();
   }
@@ -88,6 +90,10 @@ void TC4_Handler()
 //    modList[2]->proc(modList[2], NULL);
 //    modList[3]->proc(modList[3], knob1);
 //    modList[4]->proc(modList[4], knob2);
+    // step through and process each module
+    for(int i=0; i<numMods; i++) {
+      modList[i]->proc(modList[i], paramPtrList[i]);
+    }
   }
   
   // output sample to DAC
