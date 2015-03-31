@@ -4,7 +4,8 @@
 #include "defines.h"
 
 // analog inputs 
-#define IN_ADC_CH 7 // ADC channel for A0 
+#define IN_ADC_CH_POS 7 // ADC channel for A0 
+#define IN_ADC_CH_NEG 6 // ADC channel for A1 
 #define ADC_CH_MASK 0x03CC0
 #define NUM_KNOBS 4
 

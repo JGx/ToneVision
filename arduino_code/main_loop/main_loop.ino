@@ -66,6 +66,8 @@ void setup() {
 }
 
 void loop() {
+//  int temp = *currInSamplePtr;
+//  Serial.println(temp);
   read_knobs();
   check_comm();
 }
@@ -85,11 +87,6 @@ void TC4_Handler()
     // throughput
     *(currOutSamplePtr) = *(currInSamplePtr);
   } else {
-//    modList[0]->proc(modList[0], knob0);
-//    modList[1]->proc(modList[1], NULL);
-//    modList[2]->proc(modList[2], NULL);
-//    modList[3]->proc(modList[3], knob1);
-//    modList[4]->proc(modList[4], knob2);
     // step through and process each module
     for(int i=0; i<numMods; i++) {
       modList[i]->proc(modList[i], paramPtrList[i]);

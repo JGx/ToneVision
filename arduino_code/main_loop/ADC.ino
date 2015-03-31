@@ -11,14 +11,15 @@ void init_ADC() {
   ADC->ADC_CHER=ADC_CH_MASK;  // Enable ADC channels 0, 1, 10, 11, 12, 13. 
 }
 
-void get_sample(sample* inPos) {
+void get_sample(sample* in) {
   // this is faster than using analogWrite()
   // code sourced from:
   // http://www.electrosmash.com/pedalshield
   // with modifications by CL
   while((ADC->ADC_ISR & ADC_CH_MASK)!=ADC_CH_MASK); // wait for ADC 0, 1, 8, 9, 10, 11 conversion complete.
-  *inPos = (sample) ADC->ADC_CDR[IN_ADC_CH] - 2048; // read data from ADC0, write to memory
-                                                    // subtract 2048 to remove offset
+  sample inPos = (sample) ADC->ADC_CDR[IN_ADC_CH_POS]; // read data from ADC0, write to memory
+  sample inNeg = (sample) ADC->ADC_CDR[IN_ADC_CH_NEG]; // read inverse channel 
+  *in = inPos-inNeg;
 }
 
 void read_knobs() {

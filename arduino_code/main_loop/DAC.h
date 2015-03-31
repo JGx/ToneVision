@@ -4,7 +4,8 @@
 #include "defines.h"
   
 // analog outputs
-#define OUT_DAC DAC1
+#define OUT_DAC_POS DAC0
+#define OUT_DAC_NEG DAC1
 
 // functions prototypes
 void init_DAC(void);             // initialize DAC
