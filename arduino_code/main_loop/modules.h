@@ -89,8 +89,35 @@ void proc_summer(summer self);
 // external funcs
 generic new_summer(sample* inOne, sample* out, int inTwoIndex);
 
-#define TOTAL_NUM_MODULES 3 // the total number of modules available
+// -> ENVELOPE FOLLOWER
+typedef struct env_struct* env;
+#define ENV_ID 3
+#define NUM_ENV_ARGS 0
+#define ENV_BUFF_LEN 2
+#define CHARGE_CONST 0.0009
+#define DISCH_CONST 0.0001
+// struct
+struct env_struct {
+  // functions
+  void (*proc)(env self);
+  // data
+  sample* input;    // pointer to input sample
+  param* output;    // pointer to output control signal
+  sample* buffHead; // pointer to first element of buffer
+  sample* buffPos;  // points to current buffer position
+};
+// internal funcs
+void proc_env(env self);
+// external funcs
+generic new_env(sample* in, param* out);
+
+// *************
+// * CONSTANTS *
+// *************
+
+// constants
+#define TOTAL_NUM_MODULES 4 // the total number of modules available
 // global array that lists the number of arguments for each module
-const int NUMARGSLIST[TOTAL_NUM_MODULES] = {NUM_DELAY_ARGS, NUM_GAIN_ARGS, NUM_SUMMER_ARGS};
+const int NUMARGSLIST[TOTAL_NUM_MODULES] = {NUM_DELAY_ARGS, NUM_GAIN_ARGS, NUM_SUMMER_ARGS, NUM_ENV_ARGS};
 
 #endif

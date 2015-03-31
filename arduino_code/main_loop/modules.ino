@@ -28,6 +28,9 @@ generic new_generic(id modID, sample* in, sample* out, int* list) {
     case SUMMER_ID:
       return new_summer(in, out, list[0]);
       break;
+    case ENV_ID: // TODO write this line
+      return new_env(in, (param*) out);
+      break;
     default:
       return NULL;
       break;
@@ -104,6 +107,38 @@ generic new_summer(sample* inOne, sample* out, int inTwoIndex) {
   self->output = out;
   // set the functions pointers
   self->proc = &proc_summer;
+  // return pointer to newly instantiated object
+  return (generic) self;
+}
+
+// -> ENVELOPE DETECTOR
+void proc_env(env self) {
+  *(self->buffPos) = 0;
+//  *(self->buffPos) = *(self->input);
+  // previous output value from buffer
+  sample prevOut = access_buffer(self->buffHead, self->buffPos, ENV_BUFF_LEN, 1);
+  // check if input higher than prev buff pos
+  if (*(self->input) > prevOut) {
+    // charging
+    *(self->buffPos) = prevOut + (sample) CHARGE_CONST*( (float) (*(self->input)) );
+  } else {
+    // discharging
+    *(self->buffPos) = prevOut - (sample) DISCH_CONST*( (float) prevOut );
+  }
+  *(self->output) = *(self->buffPos);
+  self->buffPos = adv_buffer(self->buffHead, self->buffPos, ENV_BUFF_LEN);
+}
+
+generic new_env(sample* in, param* out) {
+  // allocate memory for this env object
+  env self = (env) malloc(sizeof(struct env_struct));
+  // set the input and output pointers
+  self->input = in;
+  self->output = out;
+  self->buffHead = init_buffer(ENV_BUFF_LEN);
+  self->buffPos = self->buffHead;
+  // set the function pointer
+  self->proc = &proc_env;
   // return pointer to newly instantiated object
   return (generic) self;
 }
