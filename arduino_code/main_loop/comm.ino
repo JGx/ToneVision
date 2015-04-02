@@ -29,17 +29,33 @@ void parse_serial_data(int* list) {
   // get number of modules
   numMods = list[currListIndex]; // second element will always be numMods (first element is total number of elements in li
   currListIndex++;               // increment currListIndex
+  Serial.print("numMods = "); // DEBUG
+  Serial.println(numMods);
   // instantiate modID array 
   modIDList = parse_main_list(list, numMods, &currListIndex);
+  Serial.print("modID list = "); // DEBUG
+  for(int i=0; i<numMods; i++) {
+    Serial.println(modIDList[i]);
+  }
   
   // get number of nets
   numNets = list[currListIndex];
   currListIndex++;
+  Serial.print("numNets = "); // DEBUG
+  Serial.println(numNets);
   
   // instantiate input array 
   inList = parse_main_list(list, numMods, &currListIndex);
+  Serial.print("in list = "); // DEBUG
+  for(int i=0; i<numMods; i++) {
+    Serial.println(inList[i]);
+  }
   // instantiate output array 
   outList = parse_main_list(list, numMods, &currListIndex);
+  Serial.print("out list = "); // DEBUG
+  for(int i=0; i<numMods; i++) {
+    Serial.println(outList[i]);
+  }
     
   // get number of args
   numArgs = list[currListIndex];
@@ -54,7 +70,6 @@ void parse_serial_data(int* list) {
   paramIDList = parse_main_list(list, numMods, &currListIndex);
   // instantiate param array
   paramList = parse_main_list(list, numMods, &currListIndex);
-  // generate instantied param pointer list
 } 
 
 void check_comm(void) {
