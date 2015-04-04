@@ -28,7 +28,7 @@ generic new_generic(id modID, sample* in, sample* out, int* list) {
     case SUMMER_ID:
       return new_summer(in, out, list[0]);
       break;
-    case ENV_ID: // TODO write this line
+    case ENV_ID: 
       return new_env(in, (param*) out);
       break;
     default:
@@ -114,18 +114,18 @@ generic new_summer(sample* inOne, sample* out, int inTwoIndex) {
 // -> ENVELOPE DETECTOR
 void proc_env(env self) {
   *(self->buffPos) = 0;
-//  *(self->buffPos) = *(self->input);
+  sample in = *(self->input)-2048; // subtract offset
   // previous output value from buffer
   sample prevOut = access_buffer(self->buffHead, self->buffPos, ENV_BUFF_LEN, 1);
   // check if input higher than prev buff pos
-  if (*(self->input) > prevOut) {
+  if (in > prevOut) {
     // charging
-    *(self->buffPos) = prevOut + (sample) CHARGE_CONST*( (float) (*(self->input)) );
+    *(self->buffPos) = in; 
   } else {
     // discharging
-    *(self->buffPos) = prevOut - (sample) DISCH_CONST*( (float) prevOut );
+    *(self->buffPos) = (sample) ( (float) prevOut - (float) DISCH_CONST*( (float) prevOut ) );
   }
-  *(self->output) = *(self->buffPos);
+  *(self->output) = *(self->buffPos)>>3; // divide output to get into range for params
   self->buffPos = adv_buffer(self->buffHead, self->buffPos, ENV_BUFF_LEN);
 }
 

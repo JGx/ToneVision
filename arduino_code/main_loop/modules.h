@@ -94,7 +94,7 @@ typedef struct env_struct* env;
 #define ENV_ID 3
 #define NUM_ENV_ARGS 0
 #define ENV_BUFF_LEN 2
-#define CHARGE_CONST 0.0009
+#define CHARGE_CONST 0
 #define DISCH_CONST 0.0001
 // struct
 struct env_struct {

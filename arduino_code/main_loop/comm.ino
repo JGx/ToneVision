@@ -66,6 +66,14 @@ void parse_serial_data(int* list) {
   // generate parsed list
   parsedArgList = parse_args(numMods, argList, modIDList);
   
+  for(int i=0; i<numMods; i++) {
+    for(int j=0; j<2; j++) {
+      Serial.print(parsedArgList[i][j]);
+      Serial.print(' ');
+    }
+    Serial.println();
+  }
+  
   // instantiate paramID array
   paramIDList = parse_main_list(list, numMods, &currListIndex);
   // instantiate param array
