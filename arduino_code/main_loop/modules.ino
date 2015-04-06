@@ -39,7 +39,9 @@ generic new_generic(id modID, sample* in, sample* out, int* list) {
 
 // -> DELAY LINE
 void proc_delay_line(delay_line self, param* paramDelay) {
-  unsigned int toDelay = map(*paramDelay, 0, 255, self->minDelay, self->len);
+  param newParam = (*paramDelay)<<5; // to get smooth changes when adjusting param
+  self->prevParam = (param)((float)(newParam - self->prevParam)*DELAY_K) + self->prevParam;
+  unsigned int toDelay = map(self->prevParam, 0, 8191, self->minDelay, self->len);
   *(self->buffPos) = 0;
   *(self->buffPos) = *(self->input);
   *(self->output) = access_buffer(self->buffHead, self->buffPos, self->len, toDelay);
@@ -57,6 +59,7 @@ generic new_delay_line(sample* in, sample* out, unsigned int minLen, unsigned in
   self->len = maxLen;
   self->buffHead = init_buffer(maxLen);
   self->buffPos = self->buffHead;
+  self->prevParam = 0;
   // set the function pointers
   self->proc = &proc_delay_line;
   // return pointer to newly instantiated object
@@ -89,10 +92,10 @@ generic new_gain(sample* in, sample* out, unsigned short maxGain, bool type) {
 // -> SUMMER
 void proc_summer(summer self) {
   sample sum = *(self->inputOne) + *(self->inputTwo);
-  if (sum > 2048) {
-    *(self->output) = 2048;
-  } else if (sum < -2048) {
-    *(self->output) = -2048;
+  if (sum > 4096) {
+    *(self->output) = 4096;
+  } else if (sum < -4096) {
+    *(self->output) = -4096;
   } else {
     *(self->output) = sum;
   }
@@ -113,20 +116,10 @@ generic new_summer(sample* inOne, sample* out, int inTwoIndex) {
 
 // -> ENVELOPE DETECTOR
 void proc_env(env self) {
-  *(self->buffPos) = 0;
-  sample in = *(self->input)-2048; // subtract offset
-  // previous output value from buffer
-  sample prevOut = access_buffer(self->buffHead, self->buffPos, ENV_BUFF_LEN, 1);
-  // check if input higher than prev buff pos
-  if (in > prevOut) {
-    // charging
-    *(self->buffPos) = in; 
-  } else {
-    // discharging
-    *(self->buffPos) = (sample) ( (float) prevOut - (float) DISCH_CONST*( (float) prevOut ) );
-  }
-  *(self->output) = *(self->buffPos)>>3; // divide output to get into range for params
-  self->buffPos = adv_buffer(self->buffHead, self->buffPos, ENV_BUFF_LEN);
+  self->currIn = (float) abs(*(self->input)); // rectify input signal
+
+  self->prevOut = (self->currIn - self->prevOut)*((float) ENV_K) + self->prevOut;
+  *(self->output) = ((sample) self->prevOut)>>4;  // shift by 4 to get in range of params
 }
 
 generic new_env(sample* in, param* out) {
@@ -135,8 +128,8 @@ generic new_env(sample* in, param* out) {
   // set the input and output pointers
   self->input = in;
   self->output = out;
-  self->buffHead = init_buffer(ENV_BUFF_LEN);
-  self->buffPos = self->buffHead;
+  self->currIn = 0;
+  self->prevOut = 0;
   // set the function pointer
   self->proc = &proc_env;
   // return pointer to newly instantiated object

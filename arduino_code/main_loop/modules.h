@@ -33,6 +33,7 @@ generic new_generic(id modID, sample* in, sample* out, int* list);
 typedef struct delay_line_struct* delay_line;
 #define DELAY_ID 0
 #define NUM_DELAY_ARGS 2 // number of arguments to new_delay_line func (not including sample in and out)
+#define DELAY_K 0.01
 // struct
 struct delay_line_struct {
   // functions
@@ -43,6 +44,7 @@ struct delay_line_struct {
   sample* buffHead; // a buffer that is the length of the maximum number of samples that can be delayed
   int minDelay;     // minimum delay length
   int len;          // the length of the buffer
+  int prevParam;    // previous parameter reading
   sample* buffPos;  // points to the current buffer position
 };
 // internal funcs
@@ -94,8 +96,7 @@ typedef struct env_struct* env;
 #define ENV_ID 3
 #define NUM_ENV_ARGS 0
 #define ENV_BUFF_LEN 2
-#define CHARGE_CONST 0
-#define DISCH_CONST 0.0001
+#define ENV_K 0.00005
 // struct
 struct env_struct {
   // functions
@@ -103,8 +104,8 @@ struct env_struct {
   // data
   sample* input;    // pointer to input sample
   param* output;    // pointer to output control signal
-  sample* buffHead; // pointer to first element of buffer
-  sample* buffPos;  // points to current buffer position
+  float currIn;     // current input
+  float prevOut;    // previous output
 };
 // internal funcs
 void proc_env(env self);

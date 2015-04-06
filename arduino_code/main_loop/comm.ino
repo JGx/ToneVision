@@ -156,10 +156,15 @@ param** create_param_ptrs(void) {
   // iterate through list of params, deal with each modules param
   for(int i=0; i<numMods; i++) {
     // look at each modules param type ID
+    param* temp = (param*) malloc(sizeof(param));
+    int toPrint;
     switch(paramIDList[i]) {
       case PARAM_STATIC_ID:
-        toReturn[i] = (param*) malloc(sizeof(param));
-        (*toReturn[i]) = paramList[i];
+        *temp = paramList[i];
+        toPrint = *temp;
+        Serial.print("whats in array");
+        Serial.println(toPrint);
+        toReturn[i] = temp;
         break;
       case PARAM_NET_ID:
         toReturn[i] = (param*) netList[paramList[i]];
