@@ -3,14 +3,6 @@
 
 #include "defines.h"
 
-// defines
-
-// parameter type IDs
-#define PARAM_STATIC_ID 0 // module takes hardcoded param
-#define PARAM_NET_ID 1    // module takes a net value as a param
-#define PARAM_KNOB_ID 2   // module takes a knob as a param
-#define PARAM_NONE_ID 3   // module doesn't take a param
-
 // globals
 int numMods;   // number of modules in effect
 // for the following arrays, the array index corresponds to an individual module

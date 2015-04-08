@@ -3,7 +3,7 @@
 // creates buffer, initializes it to 0
 sample* init_buffer(unsigned int len) {
   sample* buff; 
-  buff = (sample*) malloc(len*SIZE_OF_SAMPLE);
+  buff = (sample*) malloc(len*sizeof(sample));
   
   if(buff) {
     // initialize all vals to 0

@@ -2,6 +2,8 @@
 #define MODULES_H
 
 #include "defines.h"
+#include "filterLUTs.h"
+#include "gainLUTs.h"
 
 // general functions
 void inst_modules(void); // given all comm data, instantiates each module
@@ -31,8 +33,6 @@ generic new_generic(id modID, sample* in, sample* out, int* list);
 
 // -> DELAY LINE
 typedef struct delay_line_struct* delay_line;
-#define DELAY_ID 0
-#define NUM_DELAY_ARGS 2 // number of arguments to new_delay_line func (not including sample in and out)
 #define DELAY_K 0.01
 // struct
 struct delay_line_struct {
@@ -54,8 +54,6 @@ generic new_delay_line(sample* in, sample* out, unsigned int minLen, unsigned in
 
 // -> GAIN
 typedef struct gain_struct* gain;
-#define GAIN_ID 1
-#define NUM_GAIN_ARGS 2
 #define LINEAR 0
 #define LOG 1
 // struct
@@ -75,8 +73,6 @@ generic new_gain(sample* in, sample* out, unsigned short maxGain, bool type);
 
 // -> SUMMER
 typedef struct summer_struct* summer;
-#define SUMMER_ID 2
-#define NUM_SUMMER_ARGS 1 // this 1 argument is the second sample to be summed, treat it as netList index
 // struct
 struct summer_struct {
   // functions
@@ -93,8 +89,6 @@ generic new_summer(sample* inOne, sample* out, int inTwoIndex);
 
 // -> ENVELOPE FOLLOWER
 typedef struct env_struct* env;
-#define ENV_ID 3
-#define NUM_ENV_ARGS 0
 #define ENV_BUFF_LEN 2
 #define ENV_K 0.00005
 // struct
@@ -112,13 +106,33 @@ void proc_env(env self);
 // external funcs
 generic new_env(sample* in, param* out);
 
+// -> FILTER
+typedef struct filter_struct* filter;
+
+// struct
+struct filter_struct {
+  // functions
+  void (*proc)(filter self, param* cutoff);
+  // data
+  sample* input;    // pointer to input sample
+  param* output;    // pointer to output control signal
+  float currIn;     // current input sample
+  float currOut;    // current output sample
+  float inBuff1;    // input buffer
+  float inBuff2;    
+  float outBuff0;   // output buffer
+  float outBuff1;
+};
+// internal funcs
+void proc_filter(filter self, param* cutoff);
+// external funcs
+generic new_filter(sample* in, param* out);
+
 // *************
 // * CONSTANTS *
 // *************
 
 // constants
-#define TOTAL_NUM_MODULES 4 // the total number of modules available
-// global array that lists the number of arguments for each module
-const int NUMARGSLIST[TOTAL_NUM_MODULES] = {NUM_DELAY_ARGS, NUM_GAIN_ARGS, NUM_SUMMER_ARGS, NUM_ENV_ARGS};
+
 
 #endif

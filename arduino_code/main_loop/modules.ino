@@ -31,6 +31,9 @@ generic new_generic(id modID, sample* in, sample* out, int* list) {
     case ENV_ID: 
       return new_env(in, (param*) out);
       break;
+    case FILTER_ID: 
+      return new_filter(in, out);
+      break;
     default:
       return NULL;
       break;
@@ -132,6 +135,43 @@ generic new_env(sample* in, param* out) {
   self->prevOut = 0;
   // set the function pointer
   self->proc = &proc_env;
+  // return pointer to newly instantiated object
+  return (generic) self;
+}
+
+// -> FILTER
+void proc_filter(filter self, param* cutoff) {
+  self->currIn = (float) (*self->input);
+  self->currOut = lowPassLUT[*cutoff][0]*self->currIn + lowPassLUT[*cutoff][1]*self->inBuff1 
+                                + lowPassLUT[*cutoff][2]*self->inBuff2 
+                                + lowPassLUT[*cutoff][3]*self->outBuff0 
+                                + lowPassLUT[*cutoff][4]*self->outBuff1;
+  
+  // update buffers
+  self->inBuff2 = self->inBuff1;
+  self->inBuff1 = self->currIn;
+  self->outBuff1 = self->outBuff0;
+  self->outBuff0 = self->currOut;
+  
+  // set output
+  (*self->output) = (sample) self->currOut;
+}
+
+generic new_filter(sample* in, sample* out) {
+  // allocate memory for this env object
+  filter self = (filter) malloc(sizeof(struct filter_struct));
+  // set the input and output pointers
+  self->input = in;
+  self->output = out;
+  // initialize buffers
+  self->currIn = 0;
+  self->currOut = 0;
+  self->inBuff1 = 0;
+  self->inBuff2 = 0;
+  self->outBuff0 = 0;
+  self->outBuff1 = 0;
+  // set the function pointer
+  self->proc = &proc_filter;
   // return pointer to newly instantiated object
   return (generic) self;
 }
