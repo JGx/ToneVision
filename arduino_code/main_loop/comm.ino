@@ -161,9 +161,6 @@ param** create_param_ptrs(void) {
     switch(paramIDList[i]) {
       case PARAM_STATIC_ID:
         *temp = paramList[i];
-        toPrint = *temp;
-        Serial.print("whats in array");
-        Serial.println(toPrint);
         toReturn[i] = temp;
         break;
       case PARAM_NET_ID:

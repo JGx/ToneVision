@@ -116,12 +116,12 @@ struct filter_struct {
   // data
   sample* input;    // pointer to input sample
   param* output;    // pointer to output control signal
-  float currIn;     // current input sample
-  float currOut;    // current output sample
-  float inBuff1;    // input buffer
-  float inBuff2;    
-  float outBuff0;   // output buffer
-  float outBuff1;
+  int currIn;       // current input sample
+  int currOut;      // current output sample
+  int inBuff1;      // input buffer
+  int inBuff2;    
+  int outBuff0;     // output buffer
+  int outBuff1;
 };
 // internal funcs
 void proc_filter(filter self, param* cutoff);

@@ -44,6 +44,7 @@ void setup() {
   // check for fatal error
   // if no fatal error, go to effect defined by list in flash memory 
   if(!fatalError) { 
+    Serial.println("no fatal error");
     // instantiate signals
     netList = inst_nets();
     currInSamplePtr = netList[0];  // always set input to first member of netlist
@@ -66,6 +67,9 @@ void setup() {
 }
 
 void loop() {
+//  int temp3 = (*netList[3]);
+//  Serial.print("net 3 output: ");
+//  Serial.println(temp3);
   read_knobs();
   check_comm();
 }

@@ -44,7 +44,9 @@ generic new_generic(id modID, sample* in, sample* out, int* list) {
 void proc_delay_line(delay_line self, param* paramDelay) {
   param newParam = (*paramDelay)<<5; // to get smooth changes when adjusting param
   self->prevParam = (param)((float)(newParam - self->prevParam)*DELAY_K) + self->prevParam;
+//  Serial.println(self->prevParam);
   unsigned int toDelay = map(self->prevParam, 0, 8191, self->minDelay, self->len);
+//  Serial.println(toDelay);
   *(self->buffPos) = 0;
   *(self->buffPos) = *(self->input);
   *(self->output) = access_buffer(self->buffHead, self->buffPos, self->len, toDelay);
@@ -141,11 +143,11 @@ generic new_env(sample* in, param* out) {
 
 // -> FILTER
 void proc_filter(filter self, param* cutoff) {
-  self->currIn = (float) (*self->input);
-  self->currOut = lowPassLUT[*cutoff][0]*self->currIn + lowPassLUT[*cutoff][1]*self->inBuff1 
-                                + lowPassLUT[*cutoff][2]*self->inBuff2 
-                                + lowPassLUT[*cutoff][3]*self->outBuff0 
-                                + lowPassLUT[*cutoff][4]*self->outBuff1;
+  self->currIn = (int) (*self->input);
+  self->currOut = (lowPassLUT[*cutoff][0]*self->currIn)/FILT_DIV + (lowPassLUT[*cutoff][1]*self->inBuff1)/FILT_DIV 
+                                + (lowPassLUT[*cutoff][2]*self->inBuff2)/FILT_DIV
+                                + (lowPassLUT[*cutoff][3]*self->outBuff0)/FILT_DIV
+                                + (lowPassLUT[*cutoff][4]*self->outBuff1)/FILT_DIV;
   
   // update buffers
   self->inBuff2 = self->inBuff1;
