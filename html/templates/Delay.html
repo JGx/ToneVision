@@ -1,0 +1,40 @@
+<div class = "moduleBlock" >
+
+	<div class = "inputCol" ></div>
+	Delay ID:{{module.schema_id}}
+
+	<div class = "outputCol" ></div>
+	<form class = "form-inline moduleForm" >
+		<div class = "row">
+		<label for="minTime" class="col-md-4">Min time: </label><input class = "form-control col-md-4" 
+										type="number" id="minTime"
+									   min="5000" 
+									   max="{{module.maxVal - 10}}" step="100"
+			 						   value="{{module.minVal}}"
+			 						   ng-model="module.minVal">
+			 	<div class="input-group-addon col-md-4">Samples</div><br>
+		</div>
+
+		<div class = "row">
+		<label for="value" class="col-md-4">Value: </label><input class = "form-control col-md-4" 
+									type="number" id="value"
+									min="{{module.minVal}}" 
+									max="{{module.maxVal}}" 
+									step="100"
+			 						value="{{module.val}}"
+			 						ng-model="module.val">
+			 	<div class="input-group-addon col-md-4">Samples</div><br>
+		</div>
+
+		<div class = "row">
+		<label for="maxTime" class="col-md-4">Max time: </label><input class = "form-control col-md-4" 						type="number" id="maxTime"
+									   min="{{module.minVal + 10}}" 
+									   max="15000" step="100"
+			 						   value="{{module.maxVal}}" 
+			 						   ng-model="module.maxVal">
+			 	<div class="input-group-addon col-md-4">Samples</div><br>
+		</div>
+		
+
+	</form>
+</div>

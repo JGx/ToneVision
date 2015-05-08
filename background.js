@@ -1,5 +1,5 @@
 chrome.app.runtime.onLaunched.addListener(function() {
-  chrome.app.window.create('/html/index2.html', {
+  chrome.app.window.create('/html/index.html', {
     bounds: {
       top: 0,
       left: 0,

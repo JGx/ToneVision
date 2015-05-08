@@ -1,0 +1,19 @@
+
+<div class = "moduleBlock" id="filterBlock" >
+
+	<div class = "inputCol" ></div>
+	Filter ID:{{module.schema_id}}
+
+	<div class = "outputCol" ></div>
+	<form class = "form-inline moduleForm" id="filterForm" >
+		<div class = "row">
+		<label for="cutoff" class="col-md-4">Cut-off: </label><input class = "form-control col-md-4" 
+										type="number" id="cutoff"
+									   min="100" 
+									   max="15000" step="100"
+			 						   value="{{module.val}}"
+			 						   ng-model="module.val">
+			 	<div class="input-group-addon col-md-4">Hz</div><br>
+		</div>
+	</form>
+</div>

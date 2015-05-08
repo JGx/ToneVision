@@ -1,0 +1,51 @@
+<div class = "moduleBlock" >
+
+	<div class = "inputCol" ></div>
+	Gain ID:{{module.schema_id}}
+
+	<div class = "outputCol" ></div>
+	<form class = "form-inline moduleForm" >
+		<div class = "row">
+		<label for="maxGain" class="col-md-4">Max Gain: </label><input class = "form-control col-md-4" 
+										type="number" id="maxGain"
+									   min="0" 
+									   max="10" step=".1"
+			 						   value="{{module.maxVal}}"
+			 						   ng-model="module.maxVal">
+			 	<div class="input-group-addon col-md-4">DB</div><br>
+		</div>
+
+		<div class = "row">
+		<label for="value" class="col-md-4">Gain Val: </label><input class = "form-control col-md-4" 
+									type="number" id="value"
+									min="0" 
+									max="{{module.maxVal}}" 
+									step=".1"
+			 						value="{{module.val}}"
+			 						ng-model="module.val">
+			 	<div class="input-group-addon col-md-4">DB</div><br>
+		</div>
+		
+		<div class="row">
+			<label id="gainShape">
+				Shape 
+			</label>
+			<div class="radio">
+				<label>
+				<input type="radio" value = "Linear" ng-model="module.gainType">
+				<span>Linear</span>
+				</label>
+			</div>	
+
+			<div class="radio">
+				<label>
+				<input type="radio" value = "Logarithmic" ng-model="module.gainType" >
+				<span>Logarithmic</span>
+				</label>
+			</div>
+		</div>
+		
+		
+
+	</form>
+</div>

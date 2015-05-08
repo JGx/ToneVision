@@ -6,7 +6,6 @@
 <script src="js/bootstrap.min.js"></script> -->
 <!-- STYLESHEETS -->
 <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
-<link rel="stylesheet" href="../jquery/css/jquery.gridster.css">
 <link rel="stylesheet" href="../css/style2.css">
 <!-- SCRIPTS -->
 <script src="../jquery/js/jquery-2.1.3.js"></script>
@@ -50,30 +49,42 @@
 <script src="../jsPlumb/src/base-library-adapter.js"></script>
 <script src="../jsPlumb/src/dom.jsPlumb.js"></script>
 
+<!-- ANGULAR -->
+<script src="../js/angular.min.js"></script>
+<script src="../js/chromeSerialize.js"></script>
+<script src="../js/jsPlumbInit.js"></script>
+<script src="../js/ngApp.js"></script>
 <!-- MY SCRIPTS -->
-<script src="../js/dragAndDrop.js"></script>
-<script src="../js/serialTest.js"></script>
+<!-- <script src="../js/ngDragAndDrop.js"></script>
+<script src="../js/ngSerialTest.js"></script> -->
 <!-- HTML -->
-<body>
+<body ng-app="plumbApp" ng-controller="PlumbCtrl" ng-init="init()" >
 	<div class="page-header">
-		<h1>Tone Vision <small>Subtext for header</small></h1>
-		<button id="serialize-button" type="button" onclick="serialize()">Click to Serialize</button>
-		<button id="clear-button" type="button" onclick="clearSchema()">Clear Schema</button>
+		<h1>Tone Vision <small>Drag and drop</small></h1>
+		<button id="serialize-button" type="button" ng-click="logSchema()">Click to Serialize</button>
+		<button id="clear-button" type="button" ng-click="clearSchema()">Clear Schema</button>
+		 <script>
+		// 	//Add chrome app compatible button callbacks
+		// 	$("#serialize-button").mouseup(serialize);
+		 </script>
 	</div>
 	<div id="toolbar">
 	</div>
-	<div class="container col-sm-9" id="canvas">
-		<!-- <div class="moduleBlock" id="output">Output</div> -->
+	<div drop-canvas class="container col-sm-9" id="canvas">
+		<!-- ANGULAR: display all modules that are in the schema-->
+		<div sound-Module class="moduleBlock" ng-repeat="module in schema"
+		ng-style="{ 'left':module.pos_x,'top':module.pos_y }" schema-id="{{module.schema_id}}" module-type = "{{module.name}}" >{{module.name + module.schema_id}}</div>
 	</div>
 	<div class="col-sm-3 sidebar-offcanvas" id="palette">
 		<ul class="list-group">
-			<li class="list-group-item module">Gain</li>
-			<li class="list-group-item module">Filter</li>
-			<li class="list-group-item module">Delay</li>
-			<li class="list-group-item module">Oscillator</li>
-			<li class="list-group-item module">Compressor</li>
-			<li class="list-group-item module">Summer</li>
+			<!-- ANGULAR: display all the sound modules we support in the right hand list -->
+			<li li-module ng-repeat="liModule in moduleList" class="list-group-item module" data-identifier="{{liModule.name}}">{{liModule.name}}</li>
 		</ul>
+		<h4>Hardware Knobs -> Modules (by ID's)</h4>
+		<div ng-repeat = "knob in knobs track by $index">
+			<label> Knob {{$index}}</label>
+			<input type="number" min="0" max="10" value = "knob" step="1" ng-model="knobs[$index]"></input>
+		</div> 
 	</div>
 	<div class="container col-sm-9" id="serial-printout">
 		<textarea id="serial-textarea" rows="4" readonly=true>
