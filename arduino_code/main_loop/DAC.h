@@ -4,10 +4,11 @@
 #include "defines.h"
   
 // analog outputs
-#define OUT_DAC DAC1
+#define OUT_DAC_POS DAC0
+#define OUT_DAC_NEG DAC1
 
 // functions prototypes
-void init_DAC();                 // initialize DAC
+void init_DAC(void);             // initialize DAC
 void out_sample(sample* outDAC); // output sample to DAC
 
 #endif

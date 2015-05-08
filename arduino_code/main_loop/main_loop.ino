@@ -10,54 +10,68 @@
 #include "DAC.h"
 #include "modules.h"
 #include "buffer.h"
+#include "comm.h"
+#include "flash.h"
+#include "DueFlashStorage.h"
 
 // various debug
 #define LED_OB 13 // on board LED
 unsigned short LEDState;
 
-// instantiate modules
-delay_line delay1;
-gain gain1;
-summer summer1;
-
-// instantiate signals
-sample summerOut;
-sample* summerOutPtr;
-sample feedbackOut;
-sample* feedbackOutPtr;
-
 void setup() {
   // stop interrupts
   noInterrupts();
+  
+  // default to false
+  fatalError = false;
   
   // various debug
   LEDState = 0;
   pinMode(LED_OB, OUTPUT);
   digitalWrite(LED_OB, LOW);
+  
+  // turn serial on
   Serial.begin(9600);
   
+  // get serial data
+  int* prevList = readIntArray(MEM_START); // pull list from flash (from previous power cycle)
+  parse_serial_data(prevList);
+
+  // set default values for currIn/OutSamplePtr
+  currInSamplePtr = (sample*)malloc(sizeof(sample));
+  currOutSamplePtr = (sample*)malloc(sizeof(sample));
+
+  // check for fatal error
+  // if no fatal error, go to effect defined by list in flash memory 
+  if(!fatalError) { 
+    Serial.println("no fatal error");
+    // instantiate signals
+    netList = inst_nets();
+    currInSamplePtr = netList[0];  // always set input to first member of netlist
+    currOutSamplePtr = netList[1]; // always set output to second member of netlist
+    
+    // instantiate params
+    paramPtrList = create_param_ptrs();
+
+    // instantiate modules
+    inst_modules();
+  }
+  
   // init functions
-  init_timer();
+  init_timer(); 
   init_ADC();
   init_DAC();
-  
-  // initialize signals
-  summerOut = 0;
-  feedbackOut = 0;
-  summerOutPtr = &summerOut;
-  feedbackOutPtr = &feedbackOut;
-  
-  // initialize modules
-  delay1 = new_delay_line(summerOutPtr, currOutSamplePtr, 15000);
-  gain1 = new_gain(currOutSamplePtr, feedbackOutPtr, 1, LINEAR);
-  summer1 = new_summer(currInSamplePtr, feedbackOutPtr, summerOutPtr);
   
   // allow interrupts
   interrupts();
 }
 
 void loop() {
+//  int temp3 = (*netList[3]);
+//  Serial.print("net 3 output: ");
+//  Serial.println(temp3);
   read_knobs();
+  check_comm();
 }
 
 // interrupt handler for samples
@@ -71,11 +85,15 @@ void TC4_Handler()
   get_sample(currInSamplePtr);
   
   // do processing here
-  summer1->proc(summer1);
-  delay1->proc(delay1, knob0);
-  gain1->proc(gain1, knob1);
-  // throughput
-//  *(currOutSamplePtr) = *(currInSamplePtr);
+  if(fatalError) { // if fatal error, default to throughput
+    // throughput
+    *(currOutSamplePtr) = *(currInSamplePtr);
+  } else {
+    // step through and process each module
+    for(int i=0; i<numMods; i++) { 
+      modList[i]->proc(modList[i], paramPtrList[i]);
+    }
+  }
   
   // output sample to DAC
   out_sample(currOutSamplePtr);

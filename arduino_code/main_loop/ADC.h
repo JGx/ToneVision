@@ -4,18 +4,17 @@
 #include "defines.h"
 
 // analog inputs 
-#define IN_ADC_CH 7 // ADC channel for A0 positive part of wave 
-#define ADC_CH_MASK 0x02CC0
+#define IN_ADC_CH_POS 7 // ADC channel for A0 
+#define IN_ADC_CH_NEG 6 // ADC channel for A1 
+#define ADC_CH_MASK 0x03CC0
+#define NUM_KNOBS 4
 
 // globals
-uint8 knob0;
-uint8 knob1;
-uint8 knob2;
-uint8 knob3;
+param knobList[NUM_KNOBS]; // array of pointers to knob vals
 
 // function prototypes
 void init_ADC();                // initialize ADC
 void get_sample(sample* inPos); // get input from two ADCs, add signal together
-void read_knobs();              // read all parameter knobs
+void read_knobs(void);          // read all parameter knobs
 
 #endif
